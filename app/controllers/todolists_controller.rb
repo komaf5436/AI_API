@@ -5,7 +5,10 @@ class TodolistsController < ApplicationController
 
   def create
     list = List.new(list_params)
+    # 自然言語処理
+    list.score = Language.get_data(list_params[:body])
     list.save
+    # 画像認識
     tags = Vision.get_image_data(list.image)
     tags.each do |tag|
       list.tags.create(name: tag)
